@@ -1,0 +1,52 @@
+//# Intuition
+//The problem involves calculating the amount of water that can be trapped between bars of different heights after raining. The water above a bar depends on the minimum height of the tallest bars to its left and right. By precomputing these heights, we can efficiently compute the trapped water.
+
+//# Approach
+//**Precompute Maximum Heights:**
+//Use two arrays, leftmaxi and rightmaxi, to store the maximum bar heights to the left and right of each index, respectively.
+//Iterate from left to right to fill leftmaxi.
+//Iterate from right to left to fill rightmaxi.
+
+//**Calculate Trapped Water:**
+//For each bar at index i, compute the water level as the minimum of leftmaxi[i] and rightmaxi[i].
+//The trapped water at i is the difference between this water level and the height of the bar at i (if positive).
+
+//**Sum Up:**
+//Accumulate the trapped water for all bars to compute the final answer.
+
+//# Complexity
+//- Time complexity:
+//Computing leftmaxi and rightmaxi: 𝑂(𝑛) and 𝑂(𝑛).
+//Calculating trapped water: 𝑂(𝑛).
+//Total: 𝑂(𝑛).
+
+//- Space complexity:
+//Space for leftmaxi and rightmaxi: 𝑂(𝑛) and 𝑂(𝑛).
+//Total: 𝑂(𝑛).
+
+//# Code
+//```cpp []
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int n=height.size();
+        vector<int> leftmaxi(n,0),rightmaxi(n,0);
+        int h=0;
+        for(int i=0;i<n;i++){
+            h=max(h,height[i]);
+            leftmaxi[i]=h;
+        }
+        h=0;
+        for(int i=n-1;i>=0;i--){
+            h=max(h,height[i]);
+            rightmaxi[i]=h;
+        }
+        int ans=0;
+        for(int i=0;i<height.size();i++){
+            int h=min(leftmaxi[i],rightmaxi[i]);
+            if(h>=height[i]) ans+=(h-height[i]);
+        }
+        return ans;
+    }
+};
+//```
