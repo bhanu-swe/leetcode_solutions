@@ -1,0 +1,65 @@
+//# Intuition
+//The problem requires identifying "universal" words from words1 that satisfy the character frequency requirements derived from words2. A word from words1 is universal if it contains at least the maximum frequency of each character present in any word from words2. By consolidating the frequency requirements of all words in words2 into a single array, we can efficiently check each word in words1.
+
+//# Approach
+//Frequency Aggregation for words2:
+
+//Use a frequency array of size 26 (maxFreq) to store the maximum frequency of each character across all words in words2.
+//For each word in words2, calculate the frequency of each character and update maxFreq to store the maximum frequency of each character.
+//Filtering words1:
+
+//For each word in words1, calculate the character frequency using another frequency array (currFreq).
+//Compare currFreq with maxFreq to determine if the word meets the universal condition:
+//If any character's frequency in currFreq is less than that in maxFreq, the word is not universal.
+//Result Storage:
+
+//If a word from words1 satisfies the universal condition, add it to the result list.
+
+//# Complexity
+//- Time complexity: O(m+n)
+ //  m and n are sizes of words2 and words1
+
+//- Space complexity: O(n)
+  // n size of words1
+
+
+//# Code
+//```cpp []
+class Solution {
+public:
+    vector<string> wordSubsets(vector<string>& words1, vector<string>& words2) {
+        vector<int> maxFreq(26, 0);
+        for (const string& s : words2) {
+            vector<int> currFreq(26, 0);
+            for (char c : s) {
+                currFreq[c - 'a']++;
+            }
+            for (int i = 0; i < 26; i++) {
+                maxFreq[i] = max(maxFreq[i], currFreq[i]);
+            }
+        }
+
+        vector<string> ans;
+        for (const string& s : words1) {
+            vector<int> currFreq(26, 0);
+            for (char c : s) {
+                currFreq[c - 'a']++;
+            }
+
+            bool isUniversal = true;
+            for (int i = 0; i < 26; i++) {
+                if (currFreq[i] < maxFreq[i]) {
+                    isUniversal = false;
+                    break;
+                }
+            }
+
+            if (isUniversal) {
+                ans.push_back(s);
+            }
+        }
+
+        return ans;
+    }
+};
+//```
