@@ -1,0 +1,33 @@
+# Intuition
+<!-- Describe your first thoughts on how to solve this problem. -->
+As per question we need to verify whether we are able to form k palindrome strings from string s using all characters of string s.
+For formation of palindrome the characters need to be present 2 times.
+# Approach
+<!-- Describe your approach to solving the problem. -->
+calculate the frequency of each character in string s and store them in v . if frequency is odd we increase count(number of palindrome strings that can be formed) . if count is less than or equal to k we can create k palindrome strings using all characters of s. if s length is less than k we cannot form k palindrome strings so answer is false(edgecase).
+
+# Complexity
+- Time complexity:O(n)
+
+- Space complexity:O(1)
+
+# Code
+```cpp []
+class Solution {
+public:
+    bool canConstruct(string s, int k) {
+        int count=0;
+        if(s.size()<k) return false;
+        vector<int> v(26,0);
+        for(char c:s){
+            v[c-'a']++;
+        }
+        for(int i=0;i<26;i++){
+            if(v[i]%2!=0) count++;
+        }
+        //cout << count << endl;
+        if(count<=k) return true;
+        return false;
+    }
+};
+```
