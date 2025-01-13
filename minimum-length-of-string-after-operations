@@ -1,0 +1,39 @@
+# Intuition
+<!-- Describe your first thoughts on how to solve this problem. -->
+The intitution is for every even frequency of characters we will have 2 characters left and for odd frequency of characters we eill have only one left.
+
+# Approach
+<!-- Describe your approach to solving the problem. -->
+The approach involves maintaining a frequency vector (count) to store the frequencies of all characters in the string. After calculating the frequencies:
+
+Initialize a variable ans to 0.
+Traverse the count array:
+If the frequency of a character is odd, add 1 to ans.
+If the frequency is even, add 2 to ans.
+Finally, return the value of ans as the result.
+
+# Complexity
+- Time complexity: O(n)
+
+- Space complexity: O(n)
+
+# Code
+```cpp []
+class Solution {
+public:
+    int minimumLength(string s) {
+        vector<int> count(26,0);
+        for(char c:s){
+            count[c-'a']++;
+        }
+        int ans=0;
+        for(int i=0;i<26;i++){
+            if(count[i]==0) continue;
+            if(count[i]%2!=0) ans+=1;
+            else ans+=2;
+        }
+        return ans;
+        
+    }
+};
+```
