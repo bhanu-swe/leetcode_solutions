@@ -1,0 +1,92 @@
+Normal solution beats only 10% users
+class Solution {
+public:
+    bool solve(int i,int j,string&s,string&p,vector<vector<int>>&dp){
+        if(i>=s.size() && j>=p.size()) return true;
+        else if(i<s.size() && j>=p.size()) return false;
+        else if(i>=s.size() && j<p.size()){
+            for(int l=j;l<p.size();l++){
+                if(p[l]!='*') return false;
+            }
+            return true;
+        }
+        if(dp[i][j]!=-1) return dp[i][j];
+        bool ans=false;
+        if(p[j]!='*'){
+            if(p[j]=='?' || p[j]==s[i]){
+                ans= ans || solve(i+1,j+1,s,p,dp);
+            }
+        }else{
+            for(int k=i;k<=s.size();k++){
+                //if(p[k]=='*') break;
+                ans = ans || solve(k,j+1,s,p,dp);
+                if(ans==true) break;
+            }
+        }
+        return dp[i][j]=ans;
+    }
+    bool isMatch(string s, string p) {
+        vector<vector<int>>dp(s.size()+1,vector<int>(p.size(),-1));
+        return solve(0,0,s,p,dp);
+    }
+};
+
+better than above solution :
+class Solution {
+public:
+    bool solve(int i, int j, string &s, string &p, vector<vector<int>> &dp) {
+        if (i >= s.size() && j >= p.size()) return true;
+        if (j >= p.size()) return false;     
+        
+        if (dp[i][j] != -1) return dp[i][j];
+        
+        bool ans = false;
+        
+        if (p[j] == '*') {
+            ans = solve(i, j + 1, s, p, dp) || (i < s.size() && solve(i + 1, j, s, p, dp));
+        } else if (i < s.size() && (p[j] == '?' || p[j] == s[i])) {
+            ans = solve(i + 1, j + 1, s, p, dp);
+        }
+        
+        return dp[i][j] = ans;
+    }
+
+    bool isMatch(string s, string p) {
+        vector<vector<int>> dp(s.size() + 1, vector<int>(p.size() + 1, -1));
+        return solve(0, 0, s, p, dp);
+    }
+};
+optimized solution beats 93%:
+
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        int m = s.size(), n = p.size();
+        vector<bool> prev(n + 1, false), curr(n + 1, false);
+
+        prev[0] = true;
+
+        for (int j = 1; j <= n; j++) {
+            if (p[j - 1] == '*') {
+                prev[j] = prev[j - 1];
+            }
+        }
+
+        for (int i = 1; i <= m; i++) {
+            curr[0] = false; 
+            for (int j = 1; j <= n; j++) {
+                if (p[j - 1] == '*') {
+                    curr[j] = curr[j - 1] || prev[j];
+                } else if (p[j - 1] == '?' || s[i - 1] == p[j - 1]) {
+                    curr[j] = prev[j - 1];
+                } else {
+                    curr[j] = false;
+                }
+            }
+            swap(prev, curr);
+        }
+
+        return prev[n];
+    }
+};
+
