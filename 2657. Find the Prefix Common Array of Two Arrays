@@ -1,0 +1,46 @@
+# Intuition
+<!-- Describe your first thoughts on how to solve this problem. -->
+The problem requires calculating the prefix common array, where the count of common elements in the prefixes of arrays A and B is determined at each index. A straightforward approach involves maintaining counts of elements encountered so far in each array and comparing them to find overlaps.
+
+# Approach
+<!-- Describe your approach to solving the problem. -->
+* Use Frequency Maps:
+
+  1) Create two frequency arrays, mp and mp1, to store the occurrence of numbers in arrays A and B, respectively.
+As you iterate through both arrays simultaneously, update the frequencies for the current elements.
+Count Common Elements:
+
+* After updating the frequencies for the current index, traverse through the possible range of numbers (1 to 50 based on constraints).
+Count the numbers that have non-zero frequency in both maps (mp and mp1).
+Store the Result:
+
+* Append the count of common elements to the result array for each prefix.
+Return the Result:
+
+* Once the iteration is complete, return the ans vector containing the prefix common counts.
+# Complexity
+- Time complexity: O(n)
+
+- Space complexity: O(n)
+
+# Code
+```cpp []
+class Solution {
+public:
+    vector<int> findThePrefixCommonArray(vector<int>& A, vector<int>& B) {
+        vector<int> ans;
+        int c=0;
+        vector<int> mp(51,0),mp1(51,0);
+        for(int i=0;i<A.size();i++){
+            c=0;
+            mp[A[i]]++;
+            mp1[B[i]]++;
+            for(int ind=0;ind<51;ind++){
+                if(mp[ind]>0 && mp1[ind]>0) c++;
+            }
+            ans.push_back(c);
+        }
+        return ans;
+    }
+};
+```
