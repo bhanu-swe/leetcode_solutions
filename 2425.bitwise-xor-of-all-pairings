@@ -1,0 +1,47 @@
+# Intuition
+The problem involves finding the XOR of all pairs formed by elements of two arrays nums1 and nums2. To do this efficiently without generating all pairs, we can use the properties of XOR and analyze how many times each element from both arrays contributes to the final XOR.
+
+Key insight:
+
+1) If the size of nums1 is odd, each element of nums2 contributes once to the XOR.
+2) If the size of nums2 is odd, each element of contributes once to the XOR.
+
+# Approach
+1) Analyze Contributions:
+
+   * If nums1.size() is odd, iterate through nums2 and XOR all its elements into ans.
+   * If nums2.size() is odd, iterate through nums1 and XOR all its elements into ans.
+
+2) Return Combined Result:
+
+   * The final answer is the XOR of these contributions.
+3) Efficiency:
+
+   * The approach avoids generating pairs and directly calculates the result based on array sizes and XOR properties.
+
+
+# Complexity
+- Time complexity: Iterating through nums1 and nums2: 𝑂(𝑛+𝑚), where 𝑛=nums1.size() and 𝑚=nums2.size()
+- Space complexity: O(1)
+
+# Code
+```cpp []
+class Solution {
+public:
+    int xorAllNums(vector<int>& nums1, vector<int>& nums2) {
+        int ans=0;
+        int ans1=0;
+        if(nums1.size()%2!=0){
+            for(int it:nums2){
+                ans=ans^it;
+            }
+        }
+        if(nums2.size()%2!=0){
+            for(int it:nums1){
+                ans1=ans1^it;
+            }
+        }
+        return ans^ans1;
+    }
+};
+```
