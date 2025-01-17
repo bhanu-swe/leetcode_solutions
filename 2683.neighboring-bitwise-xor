@@ -1,0 +1,28 @@
+# Intuition
+The problem revolves around determining if a valid original array can exist such that the XOR-derived array matches the given input. The key observation is:
+
+* A derived array is valid if and only if the XOR of all elements in the derived array is zero. This is because XOR is reversible and associative.
+
+# Approach
+1) Iterate through all elements of the derived array.
+2) Compute the XOR of all elements in the array.
+3) If the final result is 0, return true (a valid array can exist); otherwise, return false.
+
+# Complexity
+- Time complexity: O(n)
+
+- Space complexity: O(1)
+
+# Code
+```cpp []
+class Solution {
+public:
+    bool doesValidArrayExist(vector<int>& derived) {
+        int ans=0;
+        for(int it:derived){
+            ans ^= it;
+        }
+        return ans==0;
+    }
+};
+```
