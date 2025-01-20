@@ -1,0 +1,55 @@
+Intuition
+The task is to determine the first index in the arr where either a complete row or a complete column in the mat is fully marked. Observing the problem, the arr gives the sequence of elements to mark in the mat. As we process each element, we can keep track of how many cells have been marked in each row and column. The first time a row or column is completely marked gives the desired result.
+
+Approach
+Mapping Matrix Elements:
+
+Create a map (position) that stores the position of each element in mat as {value: (row, col)}.
+This allows us to quickly locate the position of any element in mat in 𝑂(1) time.
+Tracking Row and Column Completion:
+
+Maintain two arrays:
+countRow: Keeps track of the number of marked elements in each row.
+countCol: Keeps track of the number of marked elements in each column.
+As you process each element in arr, update the respective row and column counters.
+Check for Completion:
+
+After updating the counters for each element, check if the row or column has been fully marked.
+If so, return the current index from arr.
+Return -1 if No Completion:
+
+If the entire arr is processed and no row or column is fully marked, return -1.
+Complexity
+Time complexity: O(n×m).
+
+Space complexity: O(n×m).
+
+Code
+class Solution {
+public:
+    int firstCompleteIndex(vector<int>& arr, vector<vector<int>>& mat) {
+        int n = mat.size();
+        int m = mat[0].size();
+        
+        unordered_map<int, pair<int, int>> position;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                position[mat[i][j]] = {i, j};
+            }
+        }
+        vector<int> countRow(n, 0);
+        vector<int> countCol(m, 0);
+        for (int k = 0; k < arr.size(); k++) {
+            int val = arr[k];
+            auto [i, j] = position[val]; 
+            
+            countRow[i]++;
+            countCol[j]++;
+            if (countRow[i] == m || countCol[j] == n) {
+                return k;
+            }
+        }
+
+        return -1; 
+    }
+};
