@@ -1,0 +1,91 @@
+Intuition
+To justify a paragraph of text, the goal is to arrange the words such that:
+
+Each line (except the last) has words that are spaced evenly.
+Any extra spaces should be added starting from the leftmost gaps between words.
+The last line is left-justified (all words are aligned to the left, with no extra space between words, and padding is added to the right).
+Approach
+Grouping Words into Lines:
+
+Traverse the list of words.
+Keep track of the total length of the current line (including spaces between words).
+If adding a new word exceeds the line's width, the current line is "finalized," and a new line begins.
+Justification:
+
+For lines other than the last:
+Compute the total spaces to distribute between words.
+Distribute spaces evenly across the gaps, starting from the leftmost gap for any extra spaces.
+For the last line:
+Left-justify the words (add a single space between words and pad the right with spaces).
+Helper Functions:
+
+solve: Handles the justification of a single line (excluding the last line).
+left: Handles the justification for the last line.
+Complexity
+Time complexity: O(n)
+Space complexity: O(1)
+Code
+class Solution {
+public: 
+   string solve(int start,int end,vector<string>&words,int width){
+    if(start==end){
+        string s=words[start];
+        int n=s.size();
+        for(int i=0;i<width-n;i++){
+            s+=' ';
+        }
+        return s;
+    }
+    int nw=end-start;
+    int sz=0;
+    for(int i=start;i<=end;i++){
+        sz+=words[i].size();
+    }
+    int sp=width-sz;
+    int nr=sp/nw;
+    int nw1=sp%nw;
+    string ans="";
+    for(int i=start;i<end;i++){
+        ans+=words[i];
+        for(int j=0;j<nr;j++){
+            ans+=' ';
+        }
+        if(nw1>0){
+            ans+=' ';
+            nw1--;
+        }
+    }
+    ans+=words[end];
+    return ans;
+   }
+   string left(int i,vector<string>&words,int width){
+    string ans="";
+    for(int j=i;j<words.size();j++){
+        ans+=words[j];
+        if(j+1<words.size()) ans+=' ';
+    }
+    for(int ind=ans.size();ind<width;ind++) ans+=' ';
+    return ans;
+    
+   }
+    vector<string> fullJustify(vector<string>& words, int maxWidth) {
+        vector<string> ans;
+        int i=0;
+        int curr=0;
+        for(int j=0;j<words.size();j++){
+            curr+=words[j].size();
+            while(curr>maxWidth){
+                string s=solve(i,j-1,words,maxWidth);
+                ans.push_back(s);
+                i=j;
+                curr=words[j].size();
+            }
+            curr+=1;
+        }
+        if(curr>1){
+            string s=left(i,words,maxWidth);
+            ans.push_back(s);
+        }
+        return ans;
+    }
+};
