@@ -1,0 +1,61 @@
+Intuition
+The problem asks for the smallest substring in string 𝑠 that contains all the characters from string 𝑡. The key idea is to use the sliding window technique combined with two frequency arrays to track character occurrences and ensure that we cover all characters in 𝑡 within the window.
+
+Approach
+Character Frequency Count:
+We maintain a frequency array tfreq to store the count of each character in string 𝑡.
+We maintain a frequency array sfreq to track the count of characters within the current window in string 𝑠.
+Sliding Window:
+We start with both left and right pointers at the beginning of the string 𝑠.
+Expand the window by moving the right pointer, and check if the current window contains all characters of 𝑡.
+Once the window contains all characters of 𝑡, try to shrink it by moving the left pointer while ensuring the window still contains all characters.
+Result Tracking:
+During the sliding window process, we track the minimum window size and update the result whenever a smaller valid window is found.
+Edge Case:
+If the length of 𝑡 is greater than 𝑠, the result is immediately an empty string.
+Complexity
+Time complexity:O(n)
+Space complexity:O(1)
+Code
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        if(s.size()<t.size()){
+            return "";
+        }
+        vector<int> tfreq(127,0),sfreq(127,0);
+        //unordered_map<char,int> mp,mp1;
+        for(int i=0;i<t.size();i++){
+            tfreq[t[i]]++;
+        }
+        int finall=0;
+        int sz=1e9;
+        int c=0;
+        string ans="";
+        int left=0;
+        for(int right=0;right<s.size();right++){
+            if(tfreq[s[right]]!=0){
+                sfreq[s[right]]++;
+                if(sfreq[s[right]]<=tfreq[s[right]]) c++;
+            }
+            while(c==t.size()){
+                if(sz>right-left+1){
+                    sz=right-left+1;
+                    finall=left;
+                }
+                if(tfreq[s[left]]!=0){
+                    if(sfreq[s[left]]<=tfreq[s[left]]){
+                        c--;
+                    }
+                    sfreq[s[left]]--;
+                }
+                left++;
+            }
+        }
+        if(sz==1e9) return "";
+       return s.substr(finall,sz);
+        
+    }
+    
+   
+};
