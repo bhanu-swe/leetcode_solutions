@@ -1,0 +1,57 @@
+Intuition
+The problem involves finding the shortest distance from each land cell to its nearest water cell. This can be visualized as a multi-source shortest path problem. By treating all water cells (isWater[i][j] == 1) as the initial sources, we can propagate distances outward using Breadth-First Search (BFS), as it ensures the shortest path is computed layer by layer.
+
+Approach
+Initialize the Grid and Queue:
+
+Convert all water cells (isWater[i][j] == 1) to 0 (height).
+Mark all land cells (isWater[i][j] == 0) as -1 (unvisited).
+Add all water cells to a queue, as they are the starting points for BFS.
+Perform BFS:
+
+Use a queue to traverse the grid in all 4 directions (right, down, left, up).
+For each unvisited cell (-1), assign its height as current height + 1 from its parent.
+Push the updated cell into the queue for further traversal.
+Return the Result:
+
+The modified isWater matrix will now represent the required heights for each cell.
+Complexity
+Time complexity:O(n⋅m)
+
+Space complexity: O(n⋅m)
+
+Code
+class Solution {
+public:
+    vector<vector<int>> highestPeak(vector<vector<int>>& isWater) {
+        int n=isWater.size();
+        int m=isWater[0].size();
+        queue<pair<int,int>> q;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(isWater[i][j]==1){
+                    q.push({i,j});
+                    isWater[i][j]=0;
+                }
+                else isWater[i][j]=-1;
+            }
+        }
+        vector<int> dx={1,0,-1,0};
+        vector<int> dy={0,1,0,-1};
+        while(!q.empty()){
+                int currx=q.front().first;
+                int curry=q.front().second;
+                q.pop();
+                for(int j=0;j<4;j++){
+                    int x=currx+dx[j];
+                    int y=curry+dy[j];
+                    if(x>=0 && x<n && y>=0 && y<m && isWater[x][y]==-1){
+                        isWater[x][y]=isWater[currx][curry]+1;
+                        q.push({x,y});
+                    }
+                }
+        }
+        return isWater;
+        
+    }
+};
