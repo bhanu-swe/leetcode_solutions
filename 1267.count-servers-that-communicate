@@ -1,0 +1,42 @@
+Intuition
+The problem asks us to count the number of servers in a grid that can communicate with at least one other server. Two servers can communicate if they are on the same row or column. The idea is to leverage the properties of rows and columns to efficiently determine communication.
+
+Approach
+Row and Column Counts:
+
+Use two arrays, r and c, to store the number of servers in each row and column respectively.
+Iterate through the grid, and for each server (grid[i][j] == 1), increment the count for its row (r[i]) and column (c[j]).
+Count Communicating Servers:
+
+Iterate through the grid again.
+For each server (grid[i][j] == 1), check if it can communicate with at least one other server. This is true if either r[i] > 1 or c[j] > 1.
+Return the Count:
+
+Increment the count for each server that satisfies the above condition.
+Complexity
+Time complexity: O(n×m)
+Space complexity: O(n+m)
+Code
+class Solution {
+public:
+    int countServers(vector<vector<int>>& grid) {
+        int count=0;
+        int n=grid.size();
+        int m=grid[0].size();
+        vector<int>  r(n,0),c(m,0);
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(grid[i][j]==1){
+                    r[i]++;
+                    c[j]++;
+                }
+            }
+        }
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(grid[i][j]==1 && (r[i]>1 || c[j]>1)) count++;
+            }
+        }
+        return count;
+    }
+};
