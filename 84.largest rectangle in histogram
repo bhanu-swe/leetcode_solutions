@@ -1,0 +1,52 @@
+Intuition
+The problem asks us to find the largest rectangle in a histogram. For each bar, the rectangle's area is determined by its height and the width that the bar can span without being blocked by taller bars. The key insight is to use a monotonic stack to efficiently compute the width for each bar.
+
+Approach
+Monotonic Stack:
+
+Use a stack to maintain indices of bars in an increasing order of heights.
+For each bar, calculate the maximum rectangle area where the current bar is the smallest bar.
+First Pass:
+
+Iterate through the histogram.
+Push the current index onto the stack if the bar's height is greater than or equal to the height of the bar at the top of the stack.
+Otherwise, keep popping from the stack and calculate the area of rectangles with the popped bar as the smallest bar.
+Second Pass:
+
+After processing all bars, there might still be indices in the stack.
+Pop these indices and calculate the maximum area for the remaining bars.
+Key Calculations:
+
+Width of the rectangle is determined as:
+If the stack is empty after popping: width = current index.
+Otherwise: width = current index - index of the bar at the top of the stack - 1.
+Complexity
+Time complexity: O(n)
+Space complexity: O(n)
+Code
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        stack<int> st;
+        int maxi=0;
+        int n=heights.size();
+        for(int i=0;i<n;i++){
+            int h=heights[i];
+            while(!st.empty() && h<heights[st.top()]){
+                int curr=st.top();
+                st.pop();
+                int width=st.empty()?i:i-st.top()-1;
+                maxi=max(maxi,heights[curr]*width);
+            }
+            st.push(i);
+        }
+        while(!st.empty()){
+            int curr=st.top();
+            st.pop();
+            int width=n;
+            if(!st.empty()) width-=st.top()+1;
+            maxi=max(maxi,heights[curr]*width);
+        }
+        return maxi;
+    }
+};
