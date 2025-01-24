@@ -1,0 +1,66 @@
+Please refer this problem to undertsnad this problem: https://leetcode.com/problems/largest-rectangle-in-histogram/description/
+
+Intuition
+The problem asks for the largest rectangle containing only 1s in a binary matrix. This can be visualized as a series of histograms for each row, where the height of each bar is determined by the number of consecutive 1s above it (including itself). The task then reduces to finding the largest rectangle area in a histogram for each row.
+
+Approach
+Convert Rows into Heights:
+
+For each row in the matrix, maintain an array heights where heights[j] represents the height of the histogram bar at column 𝑗.
+If matrix[i][j] == '0', reset heights[j] to 0. Otherwise, increment heights[j] by 1.
+Solve Largest Rectangle in Histogram:
+
+Use the monotonic stack approach to find the largest rectangle area for the histogram represented by heights.
+For each bar, calculate the width of the largest rectangle where the current bar is the shortest.
+Iterate Through Rows:
+
+For each row, update the heights array and calculate the maximum rectangle area using the histogram solution.
+Complexity
+Time complexity: O(n×m)
+Space complexity: O(m)
+Code
+class Solution {
+public:
+    int solve(vector<int>& heights) {
+        int n = heights.size();
+        stack<int> st;
+        int maxi = 0;
+
+        for (int i = 0; i <= n; i++) {
+            int h = (i < n) ? heights[i] : 0;
+
+            while (!st.empty() && h < heights[st.top()]) {
+                int curr = st.top();
+                st.pop();
+                int width = i;
+                if (!st.empty()) width = i - st.top() - 1;
+                maxi = max(maxi, heights[curr] * width);
+            }
+            st.push(i);
+        }
+
+        return maxi;
+    }
+
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        if (matrix.empty()) return 0;
+
+        int n = matrix.size();
+        int m = matrix[0].size();
+        vector<int> heights(m, 0);
+        int maxArea = 0;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (matrix[i][j] == '0') {
+                    heights[j] = 0;
+                } else {
+                    heights[j] += 1;
+                }
+            }
+            maxArea = max(maxArea, solve(heights));
+        }
+
+        return maxArea;
+    }
+};
