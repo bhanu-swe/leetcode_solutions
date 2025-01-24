@@ -1,0 +1,50 @@
+Intuition
+To identify "eventual safe nodes," we need to determine which nodes do not lead to a cycle in the directed graph. A node is "safe" if:
+
+It has no outgoing edges (a terminal node), or
+All its outgoing paths lead to other safe nodes.
+The problem can be solved using Depth-First Search (DFS) and a coloring scheme to track the state of each node.
+Approach
+Use a Coloring Scheme:
+
+color[i] == 0: Node i is unvisited.
+color[i] == 1: Node i is currently being visited (part of the current DFS path). If we revisit it, there's a cycle.
+color[i] == 2: Node i is determined to be safe.
+Depth-First Search (DFS):
+
+Traverse each node using DFS.
+If a node is already safe (color[i] == 2), return true.
+If a node is part of a cycle (color[i] == 1), return false.
+Mark the node as "being visited" (color[i] = 1), explore its neighbors, and determine its state.
+If all neighbors are safe, mark the node as safe (color[i] = 2).
+Collect Safe Nodes:
+
+Iterate over all nodes in the graph.
+For each node, if it is safe, add it to the result.
+Complexity
+Time complexity: O(V + E)
+Space complexity: O(V)
+Code
+class Solution {
+public:
+    bool dfs(int i,vector<vector<int>>&graph,vector<int>&color){
+        if(color[i]>0) return color[i]==2;
+        color[i]=1;
+        for(int it:graph[i]){
+            if(!dfs(it,graph,color)) return false;
+        }
+        color[i]=2;
+        return true;
+    }
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        int n=graph.size();
+        vector<int> color(n,0);
+        vector<int> result;
+        for(int i=0;i<n;i++){
+            if(dfs(i,graph,color)){
+                result.push_back(i);
+            }
+        }
+        return result;
+    }
+};
