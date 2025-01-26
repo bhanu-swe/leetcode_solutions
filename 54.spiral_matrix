@@ -1,0 +1,70 @@
+Intuition
+The problem requires traversing a 2D matrix in a spiral order. By visualizing the traversal, you can observe that it involves moving through rows and columns in specific directions (right, down, left, up) repeatedly until all elements are visited. A two-pointer approach helps keep track of boundaries as you progress through the matrix.
+
+Approach
+Initialization:
+
+Use i and j as pointers for the current row and column, respectively.
+Define n (number of rows) and m (number of columns) to track matrix dimensions.
+Use a boolean flag rev to alternate between clockwise and counter-clockwise movements.
+Outer Loop:
+
+Continue looping while i < n (remaining rows) and j < m (remaining columns).
+Clockwise Traversal:
+
+Traverse the current top row (j to m-1) and move down (i++).
+Traverse the current rightmost column (i to n-1) and move left (m--).
+Counter-Clockwise Traversal:
+
+Traverse the current bottom row (m-1 to j) in reverse and move up (n--).
+Traverse the current leftmost column (n-1 to i) in reverse and move right (j++).
+Update and Stop:
+
+After each cycle, update the rev flag and repeat until no rows or columns are left.
+
+Complexity
+Time complexity: O(n * m)
+Space complexity: O(n * m)
+Code
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        vector<int> ans;
+        int i=0,j=0;
+        int n=matrix.size();
+        int m=matrix[0].size();
+        bool rev=false;
+        while(i<n && j<m){
+            if(!rev){
+            if(j<m){
+            for(int ind=j;ind<m;ind++){
+              ans.push_back(matrix[i][ind]);
+            }
+            i++;
+            }
+            if(i<n){
+            for(int ind=i;ind<n;ind++){
+                 ans.push_back(matrix[ind][m-1]);
+            }
+            m--;
+            }
+            rev=!rev;
+            }else if(rev){
+                if(j<m){
+                for(int ind=m-1;ind>=j;ind--){
+                    ans.push_back(matrix[n-1][ind]);
+                }
+                n--;
+                }
+                if(i<n){
+                for(int ind=n-1;ind>=i;ind--){
+                    ans.push_back(matrix[ind][j]);
+                }
+                j++;
+                }
+                rev=!rev;
+            }
+        }
+        return ans;
+    }
+};
