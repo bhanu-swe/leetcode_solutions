@@ -1,0 +1,60 @@
+Intuition
+The problem requires determining whether a course is a prerequisite of another course. Since this involves transitive relationships (e.g., if A is a prerequisite of B, and B is a prerequisite of C, then A is a prerequisite of C), we can model this as a graph traversal problem. Using Depth-First Search (DFS), we can explore all transitive prerequisites for each course efficiently
+
+Approach
+Graph Representation:
+
+Represent the course prerequisites as a directed graph using an adjacency list graph.
+For example, if prerequisites = [[1, 0], [2, 0]], then graph[0] = {1, 2}.
+Prerequisite Tracking:
+
+Use a prereqSet (a vector of sets) where prereqSet[i] stores all prerequisites for course i.
+DFS Traversal:
+
+Traverse the graph using DFS.
+For each course i, explore its neighbors (direct prerequisites) and recursively add all their prerequisites to prereqSet[i].
+Avoid Redundant Calculations:
+
+Use a visit array to mark courses that have already been processed to avoid redundant DFS calls.
+Query Processing:
+
+For each query (u, v), check if course u exists in the prereqSet[v].
+Complexity
+Time complexity: O(V^2+E+Q).
+Space complexity: O(V+E)
+Code
+class Solution {
+public:
+    void dfs(int node, vector<vector<int>>& graph, vector<unordered_set<int>>& prerequisites, vector<int>& visit) {
+        if (visit[node] == 1) return;
+        visit[node] = 1;
+        for (int neighbor : graph[node]) {
+            dfs(neighbor, graph, prerequisites, visit);
+            prerequisites[node].insert(neighbor);
+            for (int prereq : prerequisites[neighbor]) {
+                prerequisites[node].insert(prereq);
+            }
+        }
+    }
+
+    vector<bool> checkIfPrerequisite(int numCourses, vector<vector<int>>& prerequisites, vector<vector<int>>& queries) {
+        vector<vector<int>> graph(numCourses);
+        vector<unordered_set<int>> prereqSet(numCourses);
+        for (const auto& edge : prerequisites) {
+            graph[edge[1]].push_back(edge[0]);
+        }
+        vector<int> visit(numCourses, 0);
+        for (int i = 0; i < numCourses; ++i) {
+            if (visit[i] == 0) {
+                dfs(i, graph, prereqSet, visit);
+            }
+        }
+
+        vector<bool> result;
+        for (const auto& query : queries) {
+            result.push_back(prereqSet[query[1]].count(query[0]) > 0);
+        }
+
+        return result;
+    }
+};
