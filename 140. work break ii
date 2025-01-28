@@ -1,0 +1,136 @@
+Intuition
+Problem Understanding:
+
+We need to break the string s into substrings such that each substring exists in the given dictionary (wordDict).
+
+We must return all possible valid sequences.
+
+Recursive Approach:
+
+Start from the beginning of the string and try to form substrings.
+
+If a substring exists in the dictionary, recursively check the remaining part of the string.
+
+If we reach the end of the string, add the current sequence to the result.
+
+Approach
+Backtracking:
+
+Use a recursive function solve to explore all possible ways to break the string.
+
+At each step, form a substring starting from the current index i and check if it exists in the dictionary.
+
+If it exists, recursively call the function for the remaining part of the string.
+
+If we reach the end of the string, add the current sequence to the result.
+
+Base Case:
+
+When i >= s.size(), we have successfully broken the string into valid words. Add the current sequence to the result.
+Complexity
+Time complexity: O(2^n)
+Space complexity: O(2^n)
+Code
+class Solution {
+public:
+    void solve(int i,string&s,unordered_map<string,int>&mp,string tem,vector<string>&ans){
+        if(i>=s.size()){
+            cout << tem << endl;
+            tem.pop_back();
+            ans.push_back(tem);
+            return ;
+        }
+        string curr="";
+        for(int j=i;j<s.size();j++){
+            curr+=s[j];
+            if(mp.find(curr)!=mp.end()){
+                //cout << curr << endl;
+                solve(j+1,s,mp,tem+curr+' ',ans);
+            }
+            
+        }
+
+    }
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        vector<string> ans;
+        string tem="";
+        unordered_map<string,int> mp;
+        for(string s1:wordDict) mp[s1]++;
+        solve(0,s,mp,tem,ans);
+        return ans;
+    }
+};
+
+optimized a bit :
+
+Intuition
+Problem Understanding:
+
+We need to break the string s into substrings such that each substring exists in the given dictionary (wordDict).
+
+We must return all possible valid sequences.
+
+Optimization Insight:
+
+The length of any valid substring cannot exceed the length of the longest word in the dictionary.
+
+By limiting the substring length to the maximum word length, we avoid checking unnecessarily long substrings.
+
+Approach
+Backtracking with Pruning:
+
+Use a recursive function solve to explore all possible ways to break the string.
+
+At each step, form a substring starting from the current index i and check if it exists in the dictionary.
+
+If the substring length exceeds the maximum word length, stop further exploration for that branch.
+
+Base Case:
+
+When i >= s.size(), we have successfully broken the string into valid words. Add the current sequence to the result.
+Dictionary Lookup:
+
+Store the dictionary words in an unordered_map for quick lookup.
+Max Length Optimization:
+
+Compute the maximum word length in the dictionary and use it to limit the substring length during exploration.
+Complexity
+Time complexity:O(2^n)
+Space complexity:O(2^n)
+Code
+class Solution {
+public:
+    void solve(int i,string&s,unordered_map<string,int>&mp,string tem,vector<string>&ans,int maxi){
+        if(i>=s.size()){
+            //cout << tem << endl;
+            tem.pop_back();
+            ans.push_back(tem);
+            return ;
+        }
+        string curr="";
+        int n=s.size();
+        for(int j=i;j<n;j++){
+            curr+=s[j];
+            if(mp.find(curr)!=mp.end()){
+                //cout << curr << endl;
+                solve(j+1,s,mp,tem+curr+' ',ans,maxi);
+            }
+            if(curr.size()>maxi) break;
+            
+        }
+
+    }
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        vector<string> ans;
+        string tem="";
+        unordered_map<string,int> mp;
+        int maxi=0;
+        for(string s1:wordDict){
+            mp[s1]++;
+            int l=s1.size();
+            maxi=max(maxi,l);
+        }
+        solve(0,s,mp,tem,ans,maxi);
+        return ans;
+    }
+};
