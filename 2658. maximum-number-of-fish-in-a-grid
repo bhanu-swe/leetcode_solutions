@@ -1,0 +1,57 @@
+Intuition
+The problem involves finding the maximum number of fish that can be caught by moving through connected cells in a grid. Each cell contains a certain number of fish, and you can move in four directions (up, down, left, right). The goal is to explore all connected cells starting from each cell that contains fish and calculate the total fish in each connected component. The maximum value among these totals is the answer.
+
+Approach
+Iterate Through the Grid:
+
+Loop through each cell in the grid.
+
+If the cell contains fish (grid[i][j] != 0), start exploring its connected cells.
+
+Depth-First Search (DFS):
+
+Use DFS to explore all connected cells starting from the current cell.
+
+During DFS, mark visited cells by setting their value to 0 to avoid reprocessing.
+
+Sum the fish in all connected cells.
+
+Track Maximum Fish:
+
+Keep track of the maximum fish count found in any connected component.
+Return the Result:
+
+After processing all cells, return the maximum fish count.
+Complexity
+Time complexity: O(n × m)
+Space complexity: O(n × m)
+Code
+class Solution {
+public:
+    int solve(int i, int j, vector<vector<int>>& grid) {
+        if (i < 0 || i >= grid.size() || j < 0 || j >= grid[0].size() || grid[i][j] == 0) {
+            return 0;
+        }
+        int ans = grid[i][j];
+        grid[i][j] = 0; // Mark as visited
+        for (const auto& dir : directions) {
+            ans += solve(i + dir.first, j + dir.second, grid);
+        }
+        return ans;
+    }
+
+    int findMaxFish(vector<vector<int>>& grid) {
+        int maxi = 0;
+        for (int i = 0; i < grid.size(); ++i) {
+            for (int j = 0; j < grid[0].size(); ++j) {
+                if (grid[i][j] != 0) {
+                    maxi = max(maxi, solve(i, j, grid));
+                }
+            }
+        }
+        return maxi;
+    }
+
+private:
+    vector<pair<int, int>> directions = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+};
