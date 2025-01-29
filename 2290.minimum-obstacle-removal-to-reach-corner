@@ -1,0 +1,66 @@
+Intuition
+The problem is a variation of shortest path in a weighted grid, where the weight is the number of obstacles encountered.
+Since we need to minimize the number of obstacles removed, the best approach is a shortest-path algorithm like Dijkstra’s algorithm or 0-1 BFS.
+
+Approach
+Use a priority queue (Min-Heap)
+
+We store pairs {obstacle_count, {x, y}}, where obstacle_count represents the number of obstacles removed to reach (x, y).
+This ensures we always process the cell with the smallest number of obstacles first.
+Use Dijkstra’s Algorithm (Greedy BFS)
+
+Start from (0,0) with an initial obstacle count of grid[0][0].
+Expand in four directions (right, down, left, up).
+If moving to a new cell (newX, newY) reduces the number of obstacles needed to reach it, update it and push it into the priority queue.
+Use a visited or distance array
+
+This prevents unnecessary reprocessing of the same node.
+We only update a cell if we find a shorter (i.e., lower obstacle count) path to it.
+Stop when reaching the bottom-right corner (n-1, m-1).
+
+Complexity
+Time complexity: O(NMlog(NM))
+Space complexity: O(NM)
+Code
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+
+class Solution {
+public:
+    int minimumObstacles(vector<vector<int>>& grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+
+        vector<vector<int>> visited(n, vector<int>(m, 0)); // Track visited cells
+        priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> pq;
+
+        pq.push({grid[0][0], {0, 0}});
+        visited[0][0] = 1;
+
+        vector<int> dx = {1, 0, -1, 0};
+        vector<int> dy = {0, 1, 0, -1};
+
+        while (!pq.empty()) {
+            int value = pq.top().first;
+            int currx = pq.top().second.first;
+            int curry = pq.top().second.second;
+            pq.pop();
+
+            if (currx == n - 1 && curry == m - 1) 
+                return value;
+
+            for (int i = 0; i < 4; i++) {
+                int newx = currx + dx[i];
+                int newy = curry + dy[i];
+
+                if (newx >= 0 && newx < n && newy >= 0 && newy < m && !visited[newx][newy]) {
+                    pq.push({value + grid[newx][newy], {newx, newy}});
+                    visited[newx][newy] = 1;
+                }
+            }
+        }
+        return -1;
+    }
+};
