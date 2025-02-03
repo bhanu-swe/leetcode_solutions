@@ -1,0 +1,38 @@
+Intuition
+The problem requires us to track the maximum number of overlapping intervals at any point in time. Since events have a start time and an end time, we can break this problem down into tracking changes in active events over time. Using a timeline-based approach, we can increment the count when an event starts and decrement it when an event ends. The highest count at any point gives the maximum number of concurrent events.
+
+Approach
+Use a map<int, int> (Ordered Map):
+
+Store the start times and end times as keys.
+Increase the value at startTime (since a new event starts).
+Decrease the value at endTime (since an event ends).
+Sweep Line Algorithm:
+
+Iterate through the sorted keys (time points).
+Maintain a running sum of active events.
+Keep track of the maximum concurrent events seen.
+Return the maximum active events count.
+
+Complexity
+Time complexity: O(n log n)
+Space complexity: O(n).
+Code
+#include <map>
+using namespace std;
+
+class MyCalendarThree {
+    map<int, int> mp; 
+public:
+    int book(int startTime, int endTime) {
+        mp[startTime]++;
+        mp[endTime]--;
+        int k = 0, ongoing = 0;
+        
+        for (auto& it : mp) { 
+            ongoing += it.second;
+            k = max(k, ongoing);
+        }
+        return k;
+    }
+};
