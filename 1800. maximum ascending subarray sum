@@ -1,0 +1,36 @@
+Intuition
+The problem requires us to find the maximum sum of a strictly increasing subarray. Since we need to maximize the sum, we should iterate through the array and keep track of the current sum of an ascending sequence while updating the maximum sum encountered.
+
+Approach
+Initialize Variables:
+
+Set maxSumass to the first element (since a single element is also a valid subarray).
+Set currSum to the first element to keep track of the current ascending sequence sum.
+Iterate Through the Array:
+
+If the current number is greater than the previous number, add it to currSum (extend the increasing subarray).
+Otherwise, reset currSum to the current number (start a new subarray).
+Update maxSumass with the maximum value encountered.
+Return the Maximum Sum Found.
+This ensures we efficiently find the sum of the largest strictly increasing subarray in a single pass.
+
+Complexity
+Time complexity: O(n)
+Space complexity: O(1)
+Code
+class Solution {
+public:
+    int maxAscendingSum(vector<int>& nums) {
+        int maxisumass=nums[0];
+        int currsum=nums[0];
+        for(int i=1;i<nums.size();i++){
+            if(nums[i]>nums[i-1]){
+                currsum+=nums[i];
+            }else{
+                currsum=nums[i];
+            }
+            maxisumass=max(maxisumass,currsum);
+        }
+        return maxisumass;
+    }
+};
