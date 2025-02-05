@@ -1,0 +1,40 @@
+Intuition
+The problem requires us to determine whether two strings can become equal by swapping exactly one pair of characters.
+
+If s1 is already equal to s2, return true.
+If s1 and s2 differ at exactly two positions, swapping those two characters should make them equal.
+If they differ at more than two positions, it's impossible to swap just one pair to make them equal.
+Approach
+Check for Immediate Equality:
+
+If s1 == s2, return true immediately.
+Find Mismatched Characters:
+
+Traverse both strings and count positions where s1[i] != s2[i].
+If there are more than 2 mismatches, return false (as one swap won’t be enough).
+Store character frequencies using two unordered_maps to check if swapping is possible.
+Check Swap Validity:
+
+If there are exactly 2 mismatched positions and both strings contain the same set of characters, return true.
+Otherwise, return false.
+Complexity
+Time complexity: O(n)
+Space complexity: O(1)
+Code
+class Solution {
+public:
+    bool areAlmostEqual(string s1, string s2) {
+        if(s1==s2) return true;
+        int c=0;
+        int n=s1.length();
+        unordered_map<char,int> mp,mp1;
+        for(int i=0;i<n;i++){
+            if(s1[i]!=s2[i]) c++;
+            mp[s1[i]]++;
+            mp1[s2[i]]++;
+            if(c>2) return false;
+        }
+        if(c==2 && mp==mp1) return true;
+        return false;
+    }
+};
