@@ -1,0 +1,30 @@
+Intuition
+The problem involves counting the number of "bad pairs" in an array. A pair (i,j) is bad if: j−i!=nums[j]−nums[i]
+Rearranging the condition, we get:
+nums[j]−j!=nums[i]−i
+This means that instead of comparing nums[j] - nums[i] directly, we can track values of nums[i] - i and count how many times a given value has appeared.
+
+Approach
+Define an unordered_map (mp) to store the count of occurrences of nums[i] - i.
+Iterate through the array from the last index (n-1) to the first (0), ensuring we count valid good pairs before updating the map.
+If the current nums[i] - i exists in the map, it means there are already indices j > i where nums[j] - j == nums[i] - i, which form good pairs. The count of these is stored in mp[nums[i] - i].
+Maintain a total count of all possible pairs (total = (n * (n - 1)) / 2
+Compute bad pairs as total - count.
+Complexity
+Time complexity: O(n)
+Space complexity: O(n)
+Code
+class Solution {
+public:
+    long long countBadPairs(vector<int>& nums) {
+       long long count=0;
+       unordered_map<int,int> mp;
+       long long  n=nums.size();
+       for(int i=n-1;i>=0;i--){
+         if(mp.find(nums[i]-i)!=mp.end()) count+=mp[nums[i]-i];
+         mp[nums[i]-i]++;
+       }
+       long long total=(n*(n-1))/2;
+       return total-count;
+    }
+};
