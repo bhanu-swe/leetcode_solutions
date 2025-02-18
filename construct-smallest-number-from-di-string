@@ -1,0 +1,66 @@
+Intuition
+We need to construct the smallest number using digits 1-9 without repetition while following the given pattern:
+
+I means the next number should be larger.
+D means the next number should be smaller.
+Since the smallest lexicographical order is required, we should start with the smallest available number and proceed accordingly.
+
+Approach
+Backtracking:
+
+Start with any number from 1-9 as the first digit.
+Use a recursive function solve() to build the number following the given pattern.
+Maintain a visit array to track used digits.
+Recursion Details:
+
+If the current pattern character is I, try placing the smallest available larger number.
+If the current pattern character is D, try placing the largest available smaller number.
+If we reach the end of the pattern, return true to indicate a valid sequence is found.
+Optimization:
+
+The loop in smallestNumber() starts with 1-9 to find the smallest possible valid sequence.
+If a valid sequence is found, it is returned immediately.
+Complexity
+Time complexity: O(9!)
+Space complexity: O(n)
+Code
+class Solution {
+public:
+    bool solve(int i,int start,string&ans,vector<int>&visit,string&pattern){
+        if(i>=pattern.size()) return true;
+        if(pattern[i]=='I'){
+            for(int j=start+1;j<=9;j++){
+                if(visit[j]==0){
+                    ans+='0'+j;
+                    visit[j]=1;
+                    if(solve(i+1,j,ans,visit,pattern)) return true;
+                    ans.pop_back();
+                    visit[j]=0;
+                }
+            }
+        }else{
+            for(int j=start-1;j>=1;j--){
+                if(visit[j]==0){
+                    ans+=j+'0';
+                    visit[j]=1;
+                    if(solve(i+1,j,ans,visit,pattern)) return true;
+                    visit[j]=0;
+                    ans.pop_back();
+                }
+            }
+        }
+        return false;
+    }
+    string smallestNumber(string pattern) {
+        
+        
+        for(int start=1;start<=9;start++){
+            vector<int> visit(10,0);
+            string ans="";
+            ans+='0'+start;
+            visit[start]=1;
+            if(solve(0,start,ans,visit,pattern)) return ans;
+        }
+        return "";
+    }
+};
