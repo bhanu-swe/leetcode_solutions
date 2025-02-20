@@ -1,0 +1,50 @@
+Intuition
+The problem requires us to find a binary string of length n that is not present in the given list of n binary strings of length n. Since there are 2^n possible binary strings, and the input only contains n of them, there must be at least one missing string.
+
+A brute force approach would be to generate all 2^n possible binary strings and check if they exist in the input list. Instead, we use backtracking to construct a missing binary string efficiently.
+
+Approach
+Use a Hash Map (unordered_map)
+Store all given binary strings in a unordered_map<string, int> for quick lookup.
+Backtracking to Generate Binary Strings
+Start with an empty string tem.
+At each step, append '0' or '1' and recursively explore further.
+If a generated string is not found in the map, return it as the answer.
+Use early stopping: As soon as we find a valid string, we return immediately.
+Complexity
+Time complexity: O(2ⁿ)
+Space complexity: O(n)
+Code
+class Solution {
+public:
+    bool solve(int i,int n,string&ans,string&tem,unordered_map<string,int>&mp){
+        if(i>=n){
+            if(mp.find(tem)==mp.end()){
+                
+                ans=tem;
+                return true;
+            }
+            return false;
+        }
+
+        tem+='0';
+        //cout << tem << endl;
+        if(solve(i+1,n,ans,tem,mp)) return true;
+        tem.pop_back();
+        tem+='1';
+       // cout << tem << endl;
+        if(solve(i+1,n,ans,tem,mp)) return true;
+        tem.pop_back();
+        return false;
+    }
+    string findDifferentBinaryString(vector<string>& nums) {
+        unordered_map<string,int> mp;
+        for(string s:nums) mp[s]++;
+        int n=nums.size();
+        
+        string ans="";
+        string tem="";
+        solve(0,n,ans,tem,mp);
+        return ans;
+    }
+};
