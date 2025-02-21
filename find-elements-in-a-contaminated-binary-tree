@@ -1,0 +1,62 @@
+The given problem involves a corrupted binary tree where all values have been changed. However, there is a way to reconstruct the tree using the given rules:
+
+The root value should be 0.
+The left child of a node with value x has value 2 * x + 1.
+The right child of a node with value x has value 2 * x + 2.
+Using this reconstruction method, we can store all possible values in a hash map (unordered_map in C++), allowing O(1) lookup time when checking for an element’s existence.
+
+Approach
+Reconstruct the tree using DFS (Depth-First Search):
+Assign 0 to the root.
+Use DFS to update left and right child values using the formulas:
+left child = 2 * parent + 1
+right child = 2 * parent + 2
+Store all assigned values in an unordered map for fast lookup.
+Finding a target efficiently:
+Since we stored all valid values in an unordered map, checking for existence is O(1) on average.
+Complexity
+Time complexity: O(n)
+Space complexity: O(n)
+Code
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class FindElements {
+    private:
+    TreeNode * root1;
+    unordered_map<int,int> mp;
+    void solve(TreeNode* root,int val){
+        if(root==NULL) return ;
+        root->val= val;
+        mp[val]++;
+        solve(root->left,2*val+1);
+        solve(root->right,2*val+2);
+    }
+public:
+    FindElements(TreeNode* root) {
+        root1=root;
+        root1->val=0;
+        mp[0]++;
+        solve(root1->left,1);
+        solve(root1->right,2);
+    }
+    
+    bool find(int target) {
+        if(mp.find(target)!=mp.end()) return true;
+        return false;
+    }
+};
+
+/**
+ * Your FindElements object will be instantiated and called as such:
+ * FindElements* obj = new FindElements(root);
+ * bool param_1 = obj->find(target);
+ */
